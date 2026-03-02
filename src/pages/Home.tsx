@@ -76,10 +76,10 @@ const Home = () => {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="aspect-[3/4] rounded-2xl overflow-hidden mt-12">
-              <img src="https://images.unsplash.com/photo-1616486341351-792527967d3f?auto=format&fit=crop&q=80&w=800" alt="Interior detail" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+              <img src="https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&q=80&w=800" alt="Interior detail" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
             </div>
             <div className="aspect-[3/4] rounded-2xl overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1615876234886-fd9a39faa97f?auto=format&fit=crop&q=80&w=800" alt="Interior detail" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+              <img src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&q=80&w=800" alt="Interior detail" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
             </div>
           </div>
         </div>
