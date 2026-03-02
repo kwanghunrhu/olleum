@@ -22,7 +22,9 @@ const Portfolio = () => {
     { label: 'Hotel', value: 'hotel' },
   ];
 
-  const allImages = selectedProject ? [selectedProject.imageUrl, ...(selectedProject.images || [])] : [];
+const allImages = selectedProject
+  ? [selectedProject.imageUrl, ...(selectedProject.images || [])].filter(Boolean)
+  : [];
 
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
