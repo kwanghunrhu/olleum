@@ -24,6 +24,9 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           alt={project.title}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           referrerPolicy="no-referrer"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = 'https://picsum.photos/seed/placeholder/800/1000';
+          }}
         />
         
         {imageCount > 1 && (
