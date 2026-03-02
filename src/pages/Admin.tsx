@@ -217,6 +217,7 @@ const Admin = () => {
                 <thead className="bg-stone-50 border-b border-black/5">
                   <tr>
                     <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-stone-400">Project</th>
+                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-stone-400">Gallery</th>
                     <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-stone-400">Category</th>
                     <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-stone-400">Date</th>
                     <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-stone-400 text-right">Actions</th>
@@ -229,6 +230,12 @@ const Admin = () => {
                         <div className="flex items-center gap-4">
                           <img src={project.imageUrl} className="w-12 h-12 rounded object-cover" referrerPolicy="no-referrer" />
                           <span className="font-medium">{project.title}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-1 text-stone-400">
+                          <ImageIcon size={14} />
+                          <span className="text-sm font-bold">{project.images?.length || 0}</span>
                         </div>
                       </td>
                       <td className="px-6 py-4 text-sm text-stone-500 capitalize">{project.category}</td>
