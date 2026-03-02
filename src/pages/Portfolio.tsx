@@ -22,9 +22,9 @@ const Portfolio = () => {
     { label: 'Hotel', value: 'hotel' },
   ];
 
-const allImages = selectedProject
-  ? [selectedProject.imageUrl, ...(selectedProject.images || [])].filter(Boolean)
-  : [];
+  const allImages = selectedProject
+    ? [selectedProject.imageUrl, ...(selectedProject.images || [])].filter(Boolean)
+    : [];
 
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
@@ -68,7 +68,11 @@ const allImages = selectedProject
         >
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project) => (
-              <div key={project.id} onClick={() => { setSelectedProject(project); setCurrentImageIndex(0); }} className="cursor-pointer">
+              <div
+                key={project.id}
+                onClick={() => { setSelectedProject(project); setCurrentImageIndex(0); }}
+                className="cursor-pointer"
+              >
                 <ProjectCard project={project} />
               </div>
             ))}
@@ -82,7 +86,6 @@ const allImages = selectedProject
         )}
       </div>
 
-      {/* Project Detail Modal */}
       <AnimatePresence>
         {selectedProject && (
           <motion.div
@@ -138,14 +141,22 @@ const allImages = selectedProject
 
               <div className="text-white space-y-6">
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-widest text-white/40">{selectedProject.category}</span>
-                  <h2 className="text-4xl font-serif mt-2">{selectedProject.title}</h2>
+                  <span className="text-xs font-bold uppercase tracking-widest text-white/40">
+                    {selectedProject.category}
+                  </span>
+                  <h2 className="text-4xl font-serif mt-2">
+                    {selectedProject.title}
+                  </h2>
                 </div>
+
                 <p className="text-white/60 leading-relaxed whitespace-pre-wrap">
                   {selectedProject.description}
                 </p>
+
                 <div className="pt-6 border-t border-white/10">
-                  <p className="text-xs text-white/40">Completion Date: {selectedProject.date}</p>
+                  <p className="text-xs text-white/40">
+                    Completion Date: {selectedProject.date}
+                  </p>
                 </div>
                 
                 {allImages.length > 1 && (
@@ -154,7 +165,11 @@ const allImages = selectedProject
                       <button 
                         key={idx}
                         onClick={() => setCurrentImageIndex(idx)}
-                        className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${idx === currentImageIndex ? 'border-white' : 'border-transparent opacity-40 hover:opacity-100'}`}
+                        className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                          idx === currentImageIndex 
+                            ? 'border-white' 
+                            : 'border-transparent opacity-40 hover:opacity-100'
+                        }`}
                       >
                         <img 
                           src={img} 
