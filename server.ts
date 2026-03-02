@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import AdmZip from 'adm-zip';
+import { INITIAL_PROJECTS, DEFAULT_THEME } from './src/constants';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,6 +15,7 @@ const DATA_FILE = path.join(__dirname, 'data.json');
 
 // Download Code Route
 app.get('/download-code', (req, res) => {
+  console.log('GET /download-code');
   const zip = new AdmZip();
   const ignore = ['node_modules', 'dist', '.git', 'database.sqlite', 'data.json'];
   
@@ -40,21 +42,28 @@ app.get('/download-code', (req, res) => {
 
 // Initialize Data File
 if (!fs.existsSync(DATA_FILE)) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify({ projects: [], theme: null }));
+  console.log('Initializing data.json with default values...');
+  fs.writeFileSync(DATA_FILE, JSON.stringify({ 
+    projects: INITIAL_PROJECTS, 
+    theme: DEFAULT_THEME 
+  }, null, 2));
 }
 
 const getData = () => JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
 const saveData = (data: any) => fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
 
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // API Routes
 app.get('/api/projects', (req, res) => {
+  console.log('GET /api/projects');
   const data = getData();
   res.json(data.projects);
 });
 
 app.post('/api/projects', (req, res) => {
+  console.log('POST /api/projects', req.body.title);
   const data = getData();
   data.projects.push(req.body);
   saveData(data);
@@ -62,6 +71,7 @@ app.post('/api/projects', (req, res) => {
 });
 
 app.put('/api/projects/:id', (req, res) => {
+  console.log('PUT /api/projects/', req.params.id);
   const data = getData();
   data.projects = data.projects.map((p: any) => p.id === req.params.id ? req.body : p);
   saveData(data);
@@ -69,6 +79,7 @@ app.put('/api/projects/:id', (req, res) => {
 });
 
 app.delete('/api/projects/:id', (req, res) => {
+  console.log('DELETE /api/projects/', req.params.id);
   const data = getData();
   data.projects = data.projects.filter((p: any) => p.id !== req.params.id);
   saveData(data);
@@ -76,11 +87,13 @@ app.delete('/api/projects/:id', (req, res) => {
 });
 
 app.get('/api/theme', (req, res) => {
+  console.log('GET /api/theme');
   const data = getData();
   res.json(data.theme);
 });
 
 app.post('/api/theme', (req, res) => {
+  console.log('POST /api/theme');
   const data = getData();
   data.theme = req.body;
   saveData(data);
