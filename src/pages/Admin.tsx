@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { Project, Category } from '../types';
-import { Plus, Trash2, Edit2, Save, X, LogOut, Palette } from 'lucide-react';
+import { Plus, Trash2, Edit2, X, LogOut, Palette, Upload, Image as ImageIcon } from 'lucide-react';
 import { motion } from 'motion/react';
 
 const Admin = () => {
@@ -15,8 +15,27 @@ const Admin = () => {
     category: 'commercial',
     description: '',
     imageUrl: '',
+    images: [],
     date: new Date().toISOString().split('T')[0],
   });
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, isGallery = false) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    Array.from(files).forEach((file: File) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        if (isGallery) {
+          setFormData(prev => ({ ...prev, images: [...(prev.images || []), base64String] }));
+        } else {
+          setFormData(prev => ({ ...prev, imageUrl: base64String }));
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
 
   const handleSave = () => {
     if (editingId) {
@@ -31,6 +50,7 @@ const Admin = () => {
       category: 'commercial',
       description: '',
       imageUrl: '',
+      images: [],
       date: new Date().toISOString().split('T')[0],
     });
   };
@@ -42,6 +62,7 @@ const Admin = () => {
       category: project.category,
       description: project.description,
       imageUrl: project.imageUrl,
+      images: project.images || [],
       date: project.date,
     });
     setIsAdding(true);
@@ -118,14 +139,52 @@ const Admin = () => {
                     </select>
                   </div>
                   <div className="md:col-span-2">
-                    <label className="block text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">Image URL</label>
-                    <input 
-                      type="text" 
-                      value={formData.imageUrl}
-                      onChange={e => setFormData({...formData, imageUrl: e.target.value})}
-                      className="w-full px-4 py-2 rounded-lg border border-stone-200"
-                      placeholder="https://images.unsplash.com/..."
-                    />
+                    <label className="block text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">Main Image</label>
+                    <div className="flex items-center gap-4">
+                      <label className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-stone-100 hover:bg-stone-200 rounded-lg transition-colors text-sm font-bold">
+                        <Upload size={16} /> Upload File
+                        <input type="file" accept="image/*" className="hidden" onChange={e => handleFileChange(e)} />
+                      </label>
+                      <span className="text-xs text-stone-400">OR</span>
+                      <input 
+                        type="text" 
+                        value={formData.imageUrl}
+                        onChange={e => setFormData({...formData, imageUrl: e.target.value})}
+                        className="flex-1 px-4 py-2 rounded-lg border border-stone-200"
+                        placeholder="https://images.unsplash.com/..."
+                      />
+                    </div>
+                    {formData.imageUrl && (
+                      <div className="mt-4 relative w-32 h-32">
+                        <img src={formData.imageUrl} className="w-full h-full object-cover rounded-lg border" referrerPolicy="no-referrer" />
+                        <button onClick={() => setFormData({...formData, imageUrl: ''})} className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full shadow-lg">
+                          <X size={12} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">Gallery Images (Multiple)</label>
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                      <label className="aspect-square cursor-pointer flex flex-col items-center justify-center gap-2 bg-stone-50 border-2 border-dashed border-stone-200 rounded-xl hover:bg-stone-100 transition-colors">
+                        <Plus size={24} className="text-stone-300" />
+                        <span className="text-[10px] font-bold text-stone-400">Add Photos</span>
+                        <input type="file" multiple accept="image/*" className="hidden" onChange={e => handleFileChange(e, true)} />
+                      </label>
+                      {(formData.images || []).map((img, idx) => (
+                        <div key={idx} className="relative aspect-square group">
+                          <img src={img} className="w-full h-full object-cover rounded-xl border" referrerPolicy="no-referrer" />
+                          <button 
+                            type="button"
+                            onClick={() => setFormData(prev => ({ ...prev, images: (prev.images || []).filter((_, i) => i !== idx) }))}
+                            className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                          >
+                            <X size={12} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                   <div className="md:col-span-2">
                     <label className="block text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">Description</label>
