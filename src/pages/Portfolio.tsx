@@ -103,6 +103,9 @@ const Portfolio = () => {
                   className="w-full h-full object-contain"
                   referrerPolicy="no-referrer"
                   alt={selectedProject.title}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = 'https://picsum.photos/seed/placeholder/1200/800';
+                  }}
                 />
                 
                 {allImages.length > 1 && (
@@ -151,7 +154,14 @@ const Portfolio = () => {
                         onClick={() => setCurrentImageIndex(idx)}
                         className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${idx === currentImageIndex ? 'border-white' : 'border-transparent opacity-40 hover:opacity-100'}`}
                       >
-                        <img src={img} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                        <img 
+                          src={img} 
+                          className="w-full h-full object-cover" 
+                          referrerPolicy="no-referrer" 
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = 'https://picsum.photos/seed/error/200/200';
+                          }}
+                        />
                       </button>
                     ))}
                   </div>
