@@ -37,19 +37,6 @@ const Home = () => {
               공간에 <br />
               <span className="italic">가치를</span> 더하다
             </h1>
-
-            {/* 임시 다운로드 버튼 - 사진 수정용 */}
-            <div className="mb-10 p-6 bg-blue-50 rounded-2xl border-2 border-dashed border-blue-200">
-              <p className="text-sm font-bold mb-3 text-blue-600">📸 사진 액박 해결을 위한 새 파일입니다:</p>
-              <a
-                href="/download-code"
-                className="inline-flex items-center gap-3 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-bold shadow-lg"
-              >
-                📥 사진 수정된 파일 다운로드
-              </a>
-              <p className="text-xs text-blue-400 mt-2">* 이 파일을 받아서 깃허브(olleum)에 다시 올리시면 사진이 나옵니다.</p>
-            </div>
-
             <p className="text-lg text-stone-600 mb-10 leading-relaxed max-w-lg">
               우리는 단순한 인테리어를 넘어, 그 공간에 머무는 사람들의 삶과 
               비즈니스의 본질을 담아내는 디자인을 추구합니다.
@@ -67,34 +54,30 @@ const Home = () => {
 
       {/* Philosophy Section */}
       <section className="py-32 px-6 bg-stone-50">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
-          <div>
-            <h2 className="text-4xl md:text-5xl font-serif mb-8">
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-5xl font-serif mb-12">
               옳음의 철학: <br />
               공간의 본질에 집중하다
             </h2>
-            <div className="space-y-6 text-stone-600 leading-relaxed">
+            <div className="space-y-8 text-stone-600 leading-relaxed text-lg">
               <p>
-                공간은 그곳에 머무는 사람의 삶을 담는 그릇입니다. 
-                '옳음'은 이름 그대로 화려한 기교나 일시적인 트렌드보다 
+                공간은 그곳에 머무는 사람의 삶을 담는 그릇입니다. <br />
+                '옳음'은 이름 그대로 화려한 기교나 일시적인 트렌드보다 <br />
                 공간이 가져야 할 본질적인 가치와 올바른 쓰임새를 고민합니다.
               </p>
               <p>
-                우리는 사용자의 동선과 기능성을 최우선으로 고려하며, 
-                보이지 않는 디테일까지 세밀하게 설계합니다. 
-                상업 공간의 성공적인 브랜딩부터 주거 공간의 깊은 안식까지, 
+                우리는 사용자의 동선과 기능성을 최우선으로 고려하며, <br />
+                보이지 않는 디테일까지 세밀하게 설계합니다. <br />
+                상업 공간의 성공적인 브랜딩부터 주거 공간의 깊은 안식까지, <br />
                 시간이 흐를수록 가치가 더해지는 최적의 솔루션을 제안합니다.
               </p>
             </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="aspect-[3/4] rounded-2xl overflow-hidden mt-12 bg-stone-200">
-              <img src="https://picsum.photos/seed/olleum1/800/1200" alt="Interior detail 1" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-            </div>
-            <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-stone-200">
-              <img src="https://picsum.photos/seed/olleum2/800/1200" alt="Interior detail 2" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-            </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
