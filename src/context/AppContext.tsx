@@ -23,7 +23,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return localStorage.getItem('oleum_auth') === 'true';
   });
 
-  // Load initial data from API
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -49,7 +48,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, []);
 
   useEffect(() => {
-    // Apply theme to CSS variables
     document.documentElement.style.setProperty('--primary-color', theme.primaryColor);
     document.documentElement.style.setProperty('--font-family', theme.fontFamily === 'serif' ? 'serif' : theme.fontFamily === 'mono' ? 'monospace' : 'sans-serif');
   }, [theme]);
@@ -71,14 +69,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const addProject = async (project: Omit<Project, 'id'>) => {
     const newProject = { ...project, id: Date.now().toString() };
     try {
-      await fetch('/api/projects', {
+      const res = await fetch('/api/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newProject)
       });
+      if (!res.ok) throw new Error('Failed to save project to server');
       setProjects(prev => [newProject, ...prev]);
     } catch (error) {
       console.error('Failed to add project:', error);
+      throw error;
     }
   };
 
@@ -87,23 +87,27 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (!project) return;
     const updatedProject = { ...project, ...updatedFields };
     try {
-      await fetch(`/api/projects/${id}`, {
+      const res = await fetch(`/api/projects/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedProject)
       });
+      if (!res.ok) throw new Error('Failed to update project on server');
       setProjects(prev => prev.map(p => p.id === id ? updatedProject : p));
     } catch (error) {
       console.error('Failed to update project:', error);
+      throw error;
     }
   };
 
   const deleteProject = async (id: string) => {
     try {
-      await fetch(`/api/projects/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/projects/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete project from server');
       setProjects(prev => prev.filter(p => p.id !== id));
     } catch (error) {
       console.error('Failed to delete project:', error);
+      throw error;
     }
   };
 
