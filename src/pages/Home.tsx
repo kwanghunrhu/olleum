@@ -37,19 +37,6 @@ const Home = () => {
               공간에 <br />
               <span className="italic">가치를</span> 더하다
             </h1>
-            
-            {/* 임시 다운로드 버튼 - 배포 후 삭제 가능 */}
-            <div className="mb-10 p-6 bg-stone-100 rounded-2xl border-2 border-dashed border-stone-300">
-              <p className="text-sm font-bold mb-3 text-stone-600">🚀 실제 홈페이지로 만들기 위한 파일입니다:</p>
-              <a
-                href="/download-code"
-                className="inline-flex items-center gap-3 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-bold shadow-lg"
-              >
-                📥 전체 파일 다운로드 (GitHub 업로드용)
-              </a>
-              <p className="text-xs text-stone-400 mt-2">* 이 파일을 받아서 깃허브(my-webb)에 올리시면 됩니다.</p>
-            </div>
-
             <p className="text-lg text-stone-600 mb-10 leading-relaxed max-w-lg">
               우리는 단순한 인테리어를 넘어, 그 공간에 머무는 사람들의 삶과 
               비즈니스의 본질을 담아내는 디자인을 추구합니다.
