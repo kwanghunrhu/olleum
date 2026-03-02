@@ -37,22 +37,31 @@ const Admin = () => {
     });
   };
 
-  const handleSave = () => {
-    if (editingId) {
-      updateProject(editingId, formData);
-      setEditingId(null);
-    } else {
-      addProject(formData);
-      setIsAdding(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      if (editingId) {
+        await updateProject(editingId, formData);
+        setEditingId(null);
+      } else {
+        await addProject(formData);
+        setIsAdding(false);
+      }
+      setFormData({
+        title: '',
+        category: 'commercial',
+        description: '',
+        imageUrl: '',
+        images: [],
+        date: new Date().toISOString().split('T')[0],
+      });
+    } catch (error) {
+      alert('저장 중 오류가 발생했습니다. 파일 크기가 너무 클 수 있습니다.');
+    } finally {
+      setIsSaving(false);
     }
-    setFormData({
-      title: '',
-      category: 'commercial',
-      description: '',
-      imageUrl: '',
-      images: [],
-      date: new Date().toISOString().split('T')[0],
-    });
   };
 
   const startEdit = (project: Project) => {
@@ -204,9 +213,17 @@ const Admin = () => {
                   </button>
                   <button 
                     onClick={handleSave}
-                    className="px-6 py-2 rounded-lg text-sm font-bold bg-black text-white"
+                    disabled={isSaving}
+                    className={`px-6 py-2 rounded-lg text-sm font-bold bg-black text-white flex items-center gap-2 ${isSaving ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
-                    {editingId ? 'Update Project' : 'Save Project'}
+                    {isSaving ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Saving...
+                      </>
+                    ) : (
+                      editingId ? 'Update Project' : 'Save Project'
+                    )}
                   </button>
                 </div>
               </motion.div>
