@@ -34,7 +34,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         
         if (projectsRes.ok) {
           const projectsData = await projectsRes.json();
-          if (projectsData.length > 0) setProjects(projectsData);
+          setProjects(projectsData || INITIAL_PROJECTS);
         }
         
         if (themeRes.ok) {
