@@ -23,15 +23,32 @@ const Admin = () => {
     const files = e.target.files;
     if (!files) return;
 
-    Array.from(files).forEach((file: File) => {
+    const fileList = Array.from(files);
+    let processedCount = 0;
+
+    fileList.forEach((file: File) => {
+      // 파일 크기 체크 (예: 10MB 이하)
+      if (file.size > 10 * 1024 * 1024) {
+        alert(`파일이 너무 큽니다: ${file.name} (최대 10MB)`);
+        return;
+      }
+
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64String = reader.result as string;
         if (isGallery) {
-          setFormData(prev => ({ ...prev, images: [...(prev.images || []), base64String] }));
+          setFormData(prev => ({ 
+            ...prev, 
+            images: [...(prev.images || []), base64String] 
+          }));
         } else {
           setFormData(prev => ({ ...prev, imageUrl: base64String }));
         }
+        processedCount++;
+      };
+      reader.onerror = () => {
+        console.error('File reading failed');
+        alert('파일을 읽는 중 오류가 발생했습니다.');
       };
       reader.readAsDataURL(file);
     });
@@ -149,28 +166,45 @@ const Admin = () => {
                   </div>
                   <div className="md:col-span-2">
                     <label className="block text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">Main Image</label>
-                    <div className="flex items-center gap-4">
-                      <label className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-stone-100 hover:bg-stone-200 rounded-lg transition-colors text-sm font-bold">
-                        <Upload size={16} /> Upload File
-                        <input type="file" accept="image/*" className="hidden" onChange={e => handleFileChange(e)} />
-                      </label>
-                      <span className="text-xs text-stone-400">OR</span>
-                      <input 
-                        type="text" 
-                        value={formData.imageUrl}
-                        onChange={e => setFormData({...formData, imageUrl: e.target.value})}
-                        className="flex-1 px-4 py-2 rounded-lg border border-stone-200"
-                        placeholder="https://images.unsplash.com/..."
-                      />
-                    </div>
-                    {formData.imageUrl && (
-                      <div className="mt-4 relative w-32 h-32">
-                        <img src={formData.imageUrl} className="w-full h-full object-cover rounded-lg border" referrerPolicy="no-referrer" />
-                        <button onClick={() => setFormData({...formData, imageUrl: ''})} className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full shadow-lg">
-                          <X size={12} />
-                        </button>
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-4">
+                        <label className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-stone-100 hover:bg-stone-200 rounded-lg transition-colors text-sm font-bold">
+                          <Upload size={16} /> Upload File
+                          <input type="file" accept="image/*" className="hidden" onChange={e => handleFileChange(e)} />
+                        </label>
+                        <span className="text-xs text-stone-400">OR</span>
+                        <input 
+                          type="text" 
+                          value={formData.imageUrl.startsWith('data:') ? 'File Uploaded' : formData.imageUrl}
+                          onChange={e => setFormData({...formData, imageUrl: e.target.value})}
+                          disabled={formData.imageUrl.startsWith('data:')}
+                          className={`flex-1 px-4 py-2 rounded-lg border border-stone-200 ${formData.imageUrl.startsWith('data:') ? 'bg-stone-50 text-stone-400' : ''}`}
+                          placeholder="https://images.unsplash.com/..."
+                        />
                       </div>
-                    )}
+                      
+                      {formData.imageUrl && (
+                        <div className="relative w-40 h-40 group">
+                          <img 
+                            src={formData.imageUrl} 
+                            alt="Preview"
+                            className="w-full h-full object-cover rounded-xl border-2 border-stone-100 shadow-sm" 
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = 'https://picsum.photos/seed/error/400/400';
+                            }}
+                          />
+                          <button 
+                            onClick={() => setFormData({...formData, imageUrl: ''})} 
+                            className="absolute -top-2 -right-2 p-1.5 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition-colors"
+                          >
+                            <X size={14} />
+                          </button>
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center">
+                            <span className="text-[10px] text-white font-bold uppercase tracking-widest">Main Image</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <div className="md:col-span-2">
@@ -183,11 +217,18 @@ const Admin = () => {
                       </label>
                       {(formData.images || []).map((img, idx) => (
                         <div key={idx} className="relative aspect-square group">
-                          <img src={img} className="w-full h-full object-cover rounded-xl border" referrerPolicy="no-referrer" />
+                          <img 
+                            src={img} 
+                            className="w-full h-full object-cover rounded-xl border shadow-sm" 
+                            referrerPolicy="no-referrer" 
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = 'https://picsum.photos/seed/error/400/400';
+                            }}
+                          />
                           <button 
                             type="button"
                             onClick={() => setFormData(prev => ({ ...prev, images: (prev.images || []).filter((_, i) => i !== idx) }))}
-                            className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                            className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg hover:bg-red-600"
                           >
                             <X size={12} />
                           </button>
