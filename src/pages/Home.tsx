@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { ProjectCard } from '../components/ProjectCard';
+import { ProjectModal } from '../components/ProjectModal';
 import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Project } from '../types';
 
 const Home = () => {
   const { projects } = useAppContext();
   const featuredProjects = projects.slice(0, 3);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   return (
     <div className="pt-20">
-      {/* Hero Section */}
+      {/* Hero Section 생략... (기존과 동일) */}
       <section className="relative h-[90vh] flex items-center px-6 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
@@ -52,7 +55,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Philosophy Section */}
+      {/* Philosophy Section 생략... (기존과 동일) */}
       <section className="py-32 px-6 bg-stone-50">
         <div className="max-w-3xl mx-auto text-center">
           <motion.div
@@ -96,13 +99,15 @@ const Home = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {featuredProjects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
+              <div key={project.id} onClick={() => setSelectedProject(project)}>
+                <ProjectCard project={project} />
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA Section 생략... (기존과 동일) */}
       <section className="py-32 px-6 bg-black text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-6xl font-serif mb-8">당신의 공간을 위한 <br />옳은 선택</h2>
@@ -115,6 +120,9 @@ const Home = () => {
           </Link>
         </div>
       </section>
+
+      {/* 팝업창 추가 */}
+      <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
     </div>
   );
 };
